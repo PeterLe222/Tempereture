@@ -12,6 +12,12 @@
 #include <arduinoUART.h>
 #include <arduinoUtils.h>
 
+// the value of the 'other' resistor
+#define SERIESRESISTOR 1000    
+ 
+// What pin to connect the sensor to
+#define THERMISTORPIN A0 
+
 // Pin definition for Sigfox module error LED:
 const int error_led =  13;
 
@@ -61,9 +67,11 @@ void setup()
 }
 
 void loop() 
-{  
+{ 
+  
+ 
   //exapmle temperature
-  temperature = 21.51;
+  temperature = 15.35;
   
   // Fill structure fields
   temp_union.value2 = temperature;  
