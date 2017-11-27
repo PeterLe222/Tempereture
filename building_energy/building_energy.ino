@@ -92,70 +92,77 @@ void setup()
  
 }
 
+// set initial time
+unsigned long previousMillis = 0;
+unsigned long currentMillis = Millis();
+
+// set time to start the function
+//int interval = 24 * 60 * 60 * 1000; // 1 time a day
+
+// set time to test 1 second
+int interval = 1000;
+ 
 void loop() 
 { 
-  // call sensors.requestTemperatures() to issue a global temperature 
-  // request to all devices on the bus 
-  /********************************************************************/
-  Serial.print("Requesting temperatures..."); 
-  sensors.requestTemperatures(); // Send the command to get temperature readings 
-  Serial.println("DONE"); 
-  /********************************************************************/
-  Serial.print("Temperature is: "); 
-  Serial.print(sensors.getTempCByIndex(0)); // Why "byIndex"?  
-  Serial.print("\n"); 
-  // You can have more than one DS18B20 on the same bus.  
-  // 0 refers to the first IC on the wire
- 
-  // get temperature
-  temperature = sensors.getTempCByIndex(0);
-  
-  // Fill structure fields
-  temp_union.value2 = temperature;
-  temp_union2.value4 = 12.45;
-  temp_union3.value6 = 42.45;
-  
-  // fill 'data' buffer with data
-  data[0] = temp_union.value1[3]; // big-endian
-  data[1] = temp_union.value1[2];
-  data[2] = temp_union.value1[1];
-  data[3] = temp_union.value1[0];
-
-  // fill 'data' buffer with data
-  data[4] = temp_union2.value3[3]; // big-endian
-  data[5] = temp_union2.value3[2];
-  data[6] = temp_union2.value3[1];
-  data[7] = temp_union2.value3[0];
-
-  // fill 'data' buffer with data
-  data[8] = temp_union3.value5[3]; // big-endian
-  data[9] = temp_union3.value5[2];
-  data[10] = temp_union3.value5[1];
-  data[11] = temp_union3.value5[0];
-  size = 12;
-    
-  // Send temperature packet
-  error = Sigfox.send(data,size);
-  Serial.println();
-  
-  // Check sending status
-  if( error == 0 ) 
+  // start when the time matches the desire
+  if (currentMillis - previousMillis >= interval)
   {
+    // call sensors.requestTemperatures() to issue a global temperature 
+    // request to all devices on the bus 
+    /********************************************************************/
+    Serial.print("Requesting temperatures..."); 
+    sensors.requestTemperatures(); // Send the command to get temperature readings 
+    Serial.println("DONE"); 
+    /********************************************************************/
+    Serial.print("Temperature is: "); 
+    Serial.print(sensors.getTempCByIndex(0)); // Why "byIndex"?  
+    Serial.print("\n"); 
+    // You can have more than one DS18B20 on the same bus.  
+    // 0 refers to the first IC on the wire
+    
+    // get temperature
+    temperature = sensors.getTempCByIndex(0);
+    
+    // Fill structure fields
+    temp_union.value2 = temperature;
+    temp_union2.value4 = 12.45;
+    temp_union3.value6 = 42.45;
+    
+    // fill 'data' buffer with data
+    data[0] = temp_union.value1[3]; // big-endian
+    data[1] = temp_union.value1[2];
+    data[2] = temp_union.value1[1];
+    data[3] = temp_union.value1[0];
+    
+    // fill 'data' buffer with data
+    data[4] = temp_union2.value3[3]; // big-endian
+    data[5] = temp_union2.value3[2];
+    data[6] = temp_union2.value3[1];
+    data[7] = temp_union2.value3[0];
+    
+    // fill 'data' buffer with data
+    data[8] = temp_union3.value5[3]; // big-endian
+    data[9] = temp_union3.value5[2];
+    data[10] = temp_union3.value5[1];
+    data[11] = temp_union3.value5[0];
+    size = 12;
+    
+    // Send temperature packet
+    error = Sigfox.send(data,size);
+    Serial.println();
+    
+    // Check sending status
+    if( error == 0 ) 
+    {
     //"Sigfox packet sent OK"
     digitalWrite(error_led, LOW);     
-  }
-  else 
-  {
+    }
+    else 
+    {
     //"Sigfox packet sent ERROR" 
     digitalWrite(error_led, HIGH);
-  } 
-  //Sigfox.OFF(socket);
-  delay(5000);
-  //////////////////////////////////////////////
-  // 3. sleep
-  //////////////////////////////////////////////
-  //Serial.println("Turn On");
-  //Sigfox.ON(socket);
+    } 
+  }
 }
  
         
