@@ -2,7 +2,7 @@
 #include <DallasTemperature.h>
 
 // Create a Onewire Referenca and assign it to pin 8 on your Arduino
-OneWire oneWire(8);
+OneWire oneWire(2);
 
 // declare as sensor referenec by passing oneWire reference to Dallas Temperature. 
 DallasTemperature sensors(&oneWire);
